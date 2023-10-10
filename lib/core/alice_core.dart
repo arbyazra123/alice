@@ -11,7 +11,7 @@ import 'package:alice/ui/page/alice_calls_list_screen.dart';
 import 'package:alice/utils/shake_detector.dart';
 import 'package:collection/collection.dart' show IterableExtension;
 import 'package:flutter/material.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+// import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:rxdart/rxdart.dart';
 
 class AliceCore {
@@ -45,7 +45,7 @@ class AliceCore {
 
   final AliceLogger _aliceLogger = AliceLogger();
 
-  late FlutterLocalNotificationsPlugin _flutterLocalNotificationsPlugin;
+  // late FlutterLocalNotificationsPlugin _flutterLocalNotificationsPlugin;
   GlobalKey<NavigatorState>? navigatorKey;
   Brightness _brightness = Brightness.light;
   bool _isInspectorOpened = false;
@@ -67,7 +67,7 @@ class AliceCore {
     this.showShareButton,
   }) {
     if (showNotification) {
-      _initializeNotificationsPlugin();
+      // _initializeNotificationsPlugin();
       _callsSubscription = callsSubject.listen((_) => _onCallsChanged());
     }
     if (showInspectorOnShake) {
@@ -91,38 +91,38 @@ class AliceCore {
   /// Get currently used brightness
   Brightness get brightness => _brightness;
 
-  void _initializeNotificationsPlugin() {
-    _flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
-    final initializationSettingsAndroid =
-        AndroidInitializationSettings(notificationIcon);
-    const initializationSettingsIOS = DarwinInitializationSettings();
-    final initializationSettings = InitializationSettings(
-      android: initializationSettingsAndroid,
-      iOS: initializationSettingsIOS,
-    );
-    _flutterLocalNotificationsPlugin.initialize(
-      initializationSettings,
-      onDidReceiveNotificationResponse: _onDidReceiveNotificationResponse,
-    );
-  }
+  // void _initializeNotificationsPlugin() {
+  //   _flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+  //   final initializationSettingsAndroid =
+  //       AndroidInitializationSettings(notificationIcon);
+  //   const initializationSettingsIOS = DarwinInitializationSettings();
+  //   final initializationSettings = InitializationSettings(
+  //     android: initializationSettingsAndroid,
+  //     iOS: initializationSettingsIOS,
+  //   );
+  //   _flutterLocalNotificationsPlugin.initialize(
+  //     initializationSettings,
+  //     onDidReceiveNotificationResponse: _onDidReceiveNotificationResponse,
+  //   );
+  // }
 
   void _onCallsChanged() async {
     if (callsSubject.value.isNotEmpty) {
       _notificationMessage = _getNotificationMessage();
       if (_notificationMessage != _notificationMessageShown &&
           !_notificationProcessing) {
-        await _showLocalNotification();
+        // await _showLocalNotification();
         _onCallsChanged();
       }
     }
   }
 
-  Future<void> _onDidReceiveNotificationResponse(
-      NotificationResponse response) async {
-    assert(response.payload != null, "payload can't be null");
-    navigateToCallListScreen();
-    return;
-  }
+  // Future<void> _onDidReceiveNotificationResponse(
+  //     NotificationResponse response) async {
+  //   assert(response.payload != null, "payload can't be null");
+  //   navigateToCallListScreen();
+  //   return;
+  // }
 
   /// Opens Http calls inspector. This will navigate user to the new fullscreen
   /// page where all listened http calls can be viewed.
@@ -210,37 +210,37 @@ class AliceCore {
     return notificationMessageString;
   }
 
-  Future _showLocalNotification() async {
-    _notificationProcessing = true;
-    const channelId = "Alice";
-    const channelName = "Alice";
-    const channelDescription = "Alice";
-    final androidPlatformChannelSpecifics = AndroidNotificationDetails(
-      channelId,
-      channelName,
-      channelDescription: channelDescription,
-      enableVibration: false,
-      playSound: false,
-      largeIcon: DrawableResourceAndroidBitmap(notificationIcon),
-    );
-    const iOSPlatformChannelSpecifics =
-        DarwinNotificationDetails(presentSound: false);
-    final platformChannelSpecifics = NotificationDetails(
-      android: androidPlatformChannelSpecifics,
-      iOS: iOSPlatformChannelSpecifics,
-    );
-    final String? message = _notificationMessage;
-    await _flutterLocalNotificationsPlugin.show(
-      0,
-      "Alice (total: ${callsSubject.value.length} requests)",
-      message,
-      platformChannelSpecifics,
-      payload: "",
-    );
-    _notificationMessageShown = message;
-    _notificationProcessing = false;
-    return;
-  }
+  // Future _showLocalNotification() async {
+  //   _notificationProcessing = true;
+  //   const channelId = "Alice";
+  //   const channelName = "Alice";
+  //   const channelDescription = "Alice";
+  //   final androidPlatformChannelSpecifics = AndroidNotificationDetails(
+  //     channelId,
+  //     channelName,
+  //     channelDescription: channelDescription,
+  //     enableVibration: false,
+  //     playSound: false,
+  //     largeIcon: DrawableResourceAndroidBitmap(notificationIcon),
+  //   );
+  //   const iOSPlatformChannelSpecifics =
+  //       DarwinNotificationDetails(presentSound: false);
+  //   final platformChannelSpecifics = NotificationDetails(
+  //     android: androidPlatformChannelSpecifics,
+  //     iOS: iOSPlatformChannelSpecifics,
+  //   );
+  //   final String? message = _notificationMessage;
+  //   await _flutterLocalNotificationsPlugin.show(
+  //     0,
+  //     "Alice (total: ${callsSubject.value.length} requests)",
+  //     message,
+  //     platformChannelSpecifics,
+  //     payload: "",
+  //   );
+  //   _notificationMessageShown = message;
+  //   _notificationProcessing = false;
+  //   return;
+  // }
 
   /// Add alice http call to calls subject
   void addCall(AliceHttpCall call) {
